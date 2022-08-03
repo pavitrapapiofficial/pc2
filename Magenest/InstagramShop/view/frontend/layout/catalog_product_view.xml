@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Magenest_InstagramShop::css/slick.css"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block name="product.instagram.photos" class="Magenest\InstagramShop\Block\Product\Photo" after="product.info.details" template="Magenest_InstagramShop::instagram_tab.phtml">
+                <block class="Magenest\InstagramShop\Block\Gallery\SharePopup" name="instagram_share_popup" template="shared/popup.phtml"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

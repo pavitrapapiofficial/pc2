@@ -1,0 +1,192 @@
+div.gallery-nav {
+    min-height: 35px;
+    display: inline-block;
+}
+div.gallery-url {
+    float: left;
+    height: 30px;
+    line-height: 30px;
+    display: inline-block;
+    border: 1px solid black;
+    text-align: center;
+    min-width: 100px;
+    padding: 0 20px;
+    margin-right: 20px;
+    background-color: black;
+    color: white;
+    -webkit-box-shadow: 2px 2px 2px 2px #ccc;
+    -moz-box-shadow: 2px 2px 2px 2px #ccc;
+    box-shadow: 2px 2px 2px 2px #ccc;
+}
+
+div.gallery-url:hover {
+    display: block;
+    background: white;
+    color: black;
+}
+
+div.chosen {
+    background: white;
+    color: black;
+}
+
+div.photos-wrapper {
+    clear: both;
+    margin-top: 30px;
+    margin-left: 0;
+    width: 100%;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+div.photos-wrapper > div{
+    width: 33.333%;
+    padding: 10px;
+    max-width: 33.33%;
+    box-sizing: border-box;
+}
+div.photos-wrapper > div > a{
+    display: inline-block;
+    width: 100%;
+}
+div.box {
+    border: 5px solid #fff;
+    cursor: pointer;
+    float: left;
+    margin: 0;
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    padding-bottom: calc(100% + 60px);
+    transition: 0.3s ease-in-out;
+    -webkit-box-shadow: 0px 0px 10px 0px #ccc;
+    -moz-box-shadow: 0px 0px 10px 0px #ccc;
+    box-shadow: 0px 0px 10px 0px #ccc;
+}
+
+div.box ul {
+    width: 100%;
+    margin: 0 auto;
+    list-style: none;
+    padding-top: 5px;
+    position: absolute;
+    bottom: 15px;
+    z-index: 101;
+    left: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    height: 30px;
+}
+
+.likes, .comments {
+    height: 30px;
+    width: 20px;
+    margin-bottom: 0;
+}
+
+.likes-number, .comments-number {
+    min-width: 22px;
+    margin: 0 5px;
+    font-size: 20px;
+    color: black;
+    margin-bottom: 0;
+    line-height: 30px;
+    text-align: left;
+}
+
+.likes {
+    background: url('./images/likes.jpg') no-repeat center;
+    background-size: contain;
+}
+
+.comments {
+    background: url('./images/comments.jpg') no-repeat center;
+    background-size: contain;
+}
+
+div.box img {
+    position: absolute;
+    width: 100%;
+    height: calc(100% - 60px);
+    left: 0;
+    -webkit-transition: all 300ms ease-out;
+    -moz-transition: all 300ms ease-out;
+    -o-transition: all 300ms ease-out;
+    transition: all 300ms ease-out;
+    object-fit: cover;
+}
+
+div.box .caption {
+    background-color: rgba(0, 0, 0, 0.5);
+    position: absolute;
+    color: #fff;
+    z-index: 100;
+    width: 100%;
+    height: calc(100% - 60px);
+    text-align: left;
+    padding: 30px;
+    left: 0px;
+    overflow: auto;
+    box-sizing: border-box;
+    opacity: 0;
+    visibility: hidden;
+    -webkit-transition: opacity 0.3s ease-out, visibility 0s 0.3s;
+    -moz-transition: opacity 0.3s ease-out, visibility 0s 0.3s;
+    -o-transition: opacity 0.3s ease-out, visibility 0s 0.3s;
+    transition: opacity 0.3s ease-out, visibility 0s 0.3s;
+}
+div.box:hover .caption {
+    opacity: 1;
+    visibility: visible;
+    -webkit-transition: opacity 0.3s ease-out, visibility 0s;
+    -moz-transition: opacity 0.3s ease-out, visibility 0s;
+    -o-transition: opacity 0.3s ease-out, visibility 0s;
+    transition: opacity 0.3s ease-out, visibility 0s;
+}
+
+.caption::-webkit-scrollbar {
+    width: 5px;
+}
+
+.caption::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+}
+
+.caption::-webkit-scrollbar-thumb {
+    -webkit-border-radius: 5px;
+    border-radius: 5px;
+    background-color: darkgray;
+    -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+.caption::-webkit-scrollbar-thumb:window-inactive {
+    background-color: darkgray;
+}
+
+.bottom-right {
+    font-size: 12px;
+    color: darkgray;
+    position: absolute;
+    bottom: 0px;
+    right: 16px;
+}
+@media (max-width: 768px){
+    div.photos-wrapper > div{
+        width: 50%;
+        max-width: 50%;
+    }
+    div.box .caption{
+        opacity: 1;
+        visibility: visible;
+    }
+}
+@media (max-width: 400px){
+    div.photos-wrapper > div{
+        width: 100%;
+        max-width: 100%;
+    }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "magenest/module-instagram-shop",
+  "description": "Instagram Shop with Magento 2",
+  "require": {
+    "php": "~5.5.0|~5.6.0|7.0.2|7.0.4|~7.0.6|~7.1.0",
+    "magenest/core" : "*"
+  },
+  "type": "magento2-module",
+  "version": "3.1.2",
+  "license": [
+    "proprietary"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "Magenest\\InstagramShop\\": ""
+    }
+  }
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget id="instagram_photo_slider" class="Magenest\InstagramShop\Block\Photo\Slider" placeholder_image="Magento_Widget::placeholder.gif">
+        <label translate="true">Instagram Slider</label>
+        <description translate="true">List of Photos on Instagram Account</description>
+        <parameters>
+            <parameter name="title"	xsi:type="text"	required="true" visible="true">
+                <label translate="true">Title</label>
+            </parameter>
+            <parameter name="animation_loop" required="false" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label>Animation loop</label>
+            </parameter>
+            <parameter name="reverse" required="false" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label>Reverse the animation direction</label>
+            </parameter>
+            <parameter name="pause_on_hover" required="false" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label>Pause on hover</label>
+            </parameter>
+            <parameter name="pause_on_action" required="false" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label>Pause the slideshow when interacting with control elements</label>
+            </parameter>
+            <parameter name="touch" required="false" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label>Allow touch swipe navigation</label>
+            </parameter>
+            <parameter name="mousewheel" required="false" xsi:type="select" source_model="Magento\Config\Model\Config\Source\Yesno">
+                <label>Allows slider navigating via mousewheel</label>
+            </parameter>
+            <parameter name="item_margin" required="false" xsi:type="text">
+                <label>Margin between carousel items</label>
+            </parameter>
+            <parameter name="slide_show_speed" required="false" xsi:type="text">
+                <label>Slide show speed (ms)</label>
+            </parameter>
+            <parameter name="animation_speed" required="false" xsi:type="text">
+                <label>Animation speed (ms)</label>
+            </parameter>
+            <parameter name="min_items" required="false" xsi:type="text">
+                <label>Minimum number of carousel items</label>
+            </parameter>
+            <parameter name="max_items" required="false" xsi:type="text">
+                <label>Maximum number of carousel items</label>
+            </parameter>
+            <parameter name="item_width" required="false" xsi:type="text">
+                <label>Box-model width of individual carousel items</label>
+            </parameter>
+            <parameter name="move" required="false" xsi:type="text">
+                <label>Number of carousel items that should move on animation</label>
+            </parameter>
+            <parameter name="cache_lifetime" xsi:type="text" visible="true">
+                <label translate="true">Cache Lifetime (Seconds)</label>
+                <description translate="true">86400 by default, if not set. To refresh instantly, clear the Blocks HTML Output cache.</description>
+            </parameter>
+            <parameter name="template" xsi:type="select" required="false" visible="true">
+                <label translate="true">Template</label>
+                <options>
+                    <option	name="default" value="slider/slider.phtml" selected="true">
+                        <label translate="true">Photo List slider</label>
+                    </option>
+                </options>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

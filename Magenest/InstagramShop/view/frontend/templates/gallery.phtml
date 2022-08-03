@@ -1,0 +1,159 @@
+<?php
+/** get tags from store configuration */
+$tags = $block->getTags();
+/** get view param */
+$view = $block->getViewParam();
+/** get page param */
+$page = $block->getPageParam();
+?>
+<div class="gallery">
+    <?php
+    echo $block->getChildHtml('instagram_share_popup');
+    ?>
+</div>
+<!-- gallery view navigation, includes gallery & tags   -->
+<div class="gallery-nav">
+    <!-- gallery button   -->
+    <a href="<?php echo $block->getUrl() ?>instagram/gallery/">
+        <div class="gallery-url <?php if (empty($view)) echo 'chosen' ?>">Gallery</div>
+    </a>
+    <?php
+
+    if (!empty($tags)) {
+        foreach ($tags as $tag) {
+            if (!empty($tag)) {
+                ?>
+                <!-- tags button  -->
+                <a href="<?php echo $block->getUrl() ?>instagram/<?php echo $tag ?>">
+                    <div class='gallery-url <?php if (!empty($view) && $tag == $view) echo 'chosen' ?>'>
+                        <?php echo "#" . $tag ?>
+                    </div>
+                </a>
+                <?php
+            }
+        }
+    }
+    ?>
+</div>
+
+
+<?php
+
+/**
+ * @var $block \Magenest\InstagramShop\Block\Gallery\Gallery
+ */
+$photos = $block->getCollection();
+
+if ($photos->getSize() == 0) {
+    echo '<br/><br/><h2 style="clear:both; font-family: Arial, Helvetica, sans-serif; ">There are no photo to display yet, please comeback later</h2>';
+} else {
+?>
+<!-- If found, display photos here    -->
+<div class="photos-wrapper">
+    <?php
+    /** @var \Magenest\InstagramShop\Model\Photo $photo */
+    foreach ($photos as $photo) {
+        ?>
+        <div id="<?= $photo->getPhotoId() ?>">
+            <a href="<?php echo $photo->getUrl() ?>">
+                <div class="box">
+                    <img src="<?php echo $photo->getSource() ?>" alt="image"/>
+                    <span class="caption">
+                    <h3><?php if ($view) echo $photo->getUser() ?></h3>
+                    <p><?php echo $photo->getCaption() ?></p>
+                    <div class="bottom-right">
+                    </div>
+                </span>
+                    <ul>
+                        <li class="likes"></li>
+                        <li class="likes-number"><?php echo $photo->getLikes() ?></li>
+                        <li class="comments"></li>
+                        <li class="comments-number"><?php echo $photo->getComments() ?></li>
+                    </ul>
+                </div>
+            </a>
+            <?= $block->getLayout()->createBlock(\Magenest\InstagramShop\Block\Instagram\LinkedProducts::class)->setProductList($photo->getProductIds())->toHtml() ?>
+        </div>
+        <?php
+    }
+    ?>
+    <div style="clear: both"></div>
+
+    <div class="toolbar-bottom" style="margin-top: 15px;">
+        <div class="toolbar">
+            <?php echo $block->getPagerHtml(); ?>
+        </div>
+    </div>
+    <?php
+    }
+    ?>
+    <script>
+        require(['jquery'], function ($) {
+            var photos = <?=json_encode($photos->getData())?>;
+			var galleryOpen = false;
+            function closeWidget(){
+                $('.gallery #widget-timeline-detail').addClass('widget-hidden');
+                $("body").css("overflow-y","");
+            }
+
+            $('.photos-wrapper div > a').on('click', function (e) {
+                var self = this;
+                e.preventDefault();
+                var photo = $.map(photos, function (item) {
+                    if ($(self).parent().attr('id') === item.photo_id) {
+                        return item;
+                    }
+                });
+                photo = photo[0];
+                $('.gallery #widget-instagram-image-url').attr('src', photo.source);
+                var html = $(self).parent().children('#linked-products').html();
+                // remove all white space, tab, new line...
+                if (html.replace(/[\r\n]+/g, '').trim() !== '') {
+                    $('.gallery .featured-products').show();
+                    $('.gallery .widget-text-link-container').html(html);
+                } else {
+                    $('.gallery .featured-products').hide();
+                    $('.gallery .widget-text-link-container').html('');
+                }
+                $('.gallery #widget-instagram-url').attr('href', photo.url);
+                $('.gallery .widget-detail-title').text(photo.caption ? photo.caption : '');
+                $('.gallery #created_at_instagram').text(photo.created_at);
+                $('.gallery #widget-timeline-detail').data('photo-id', photo.photo_id).removeClass('widget-hidden');
+                $("body").css("overflow-y","hidden");
+                galleryOpen = true;
+				$("body").on("keyup",function(){
+				    if(galleryOpen){
+					    closeWidget();
+                        galleryOpen = false;
+				    }
+				})
+            });
+            $('.gallery #widget-detail-close').on('click', function () {
+                closeWidget();
+                galleryOpen = false;
+            });
+
+            $('.gallery #widget-prev-post').on('click', function () {
+                var photoId = $('.gallery #widget-timeline-detail').data('photo-id');
+                $.map(photos, function (item, index) {
+                    if (item.photo_id === photoId) {
+                        var id = index === 0 ? photos.length : index;
+                        $('.photos-wrapper div#' + photos[id - 1].photo_id + ' a').trigger('click');
+                    }
+                });
+            });
+            $('.gallery #widget-next-post').on('click', function () {
+                var photoId = $('.gallery #widget-timeline-detail').data('photo-id');
+                $.map(photos, function (item, index) {
+                    if (item.photo_id === photoId) {
+                        var id = index === photos.length - 1 ? -1 : index;
+                        $('.photos-wrapper div#' + photos[id + 1].photo_id + ' a').trigger('click');
+                    }
+                });
+            });
+
+        })
+    </script>
+</div>
+
+

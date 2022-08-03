@@ -1,0 +1,12 @@
+.instagram-shop-connection {
+    padding-left: 70px;
+    background: url(images/instagram-shop.png) no-repeat 0 0;
+    line-height: 23px;
+    background-size: 60px 60px;
+}
+.facebook-login {
+    padding-left: 70px;
+    background: url(images/facebook.png) no-repeat 0 0;
+    line-height: 23px;
+    background-size: 60px 60px;
+}

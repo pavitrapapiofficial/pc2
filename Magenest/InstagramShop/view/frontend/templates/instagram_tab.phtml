@@ -1,0 +1,139 @@
+<?php
+/**
+ * @var $block \Magenest\InstagramShop\Block\Product\Photo
+ */
+if ($block->isAddInstagramToProduct() && count($block->getPhotosByProduct())):
+	?>
+	<?php
+	$photos = $block->getPhotosByProduct();
+	$photosData = [];
+	foreach ($photos as $photo) {
+		$photosData[] = $photo->getData();
+	}
+	?>
+
+	<div class="instagram-tab">
+        <?php
+        echo $block->getChildHtml('instagram_share_popup');
+        ?>
+	</div>
+	<div class="instagram-details"
+	     style="display: inline-block;border:1px solid #e2e2e2;width: 100%;padding-top: 25px;">
+		<ul class="instagram-slider">
+			<?php
+			foreach ($photos as $photo) {
+				echo '<li id="' . $photo->getPhotoId() . '">';
+				echo '<a href="' . $photo->getUrl() . '" title="' . $photo->getUrl() . '" id="' . $photo->getPhotoId() . '">';
+				echo '<img src="' . $photo->getSource() . '" alt="' . $photo->getCaption() . '" />';
+				echo '</a>';
+				echo $block->getLayout()->createBlock(\Magenest\InstagramShop\Block\Instagram\LinkedProducts::class)->setProductList($photo->getProductIds())->toHtml();
+				echo '</li>';
+			}
+			?>
+		</ul>
+		<div>
+			<div class="heading-title center" style="text-align: center;">
+				<h4 style="font-size: 20px;">
+					<strong style="font-weight: bolder!important;text-transform: initial;font-family: Brandon Regular;"><a
+								href="https://www.instagram.com/explore/tags/<?= $block->getHashTag() ?>/"
+								target="_blank">#<?= $block->getHashTag() ?></a>: </strong>
+					<?= $block->getBlockTitle() ?></h4>
+				<span class="center"><?= $block->getBlockContent() ?></span>
+				<br>
+				<?php if ($block->getViewFullGalleryTitle()) : ?>
+				<a href="<?= $block->getBaseUrl() ?>instagram/gallery/" class="instagram-button"
+				   style="<?= $block->getViewFullGalleryCss() ?>">
+					<?= $block->getViewFullGalleryTitle() ?>
+				</a>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+	<script>
+        require(['jquery'], function ($) {
+            var photos = <?=json_encode($photosData)?>;
+            $('.instagram-details > ul > li > a').on('click', function (e) {
+                var self = this;
+                e.preventDefault();
+                var photo = $.map(photos, function (item) {
+                    if ($(self).parent().attr('id') === item.photo_id) {
+                        return item;
+                    }
+                });
+                photo = photo[0];
+                $('.instagram-tab #widget-instagram-image-url').attr('src', photo.source);
+                $('.instagram-tab #widget-instagram-url').attr('href', photo.url);
+                $('.instagram-tab .widget-detail-title').text(photo.caption ? photo.caption : '');
+                // $('.instagram-tab .widget-text-link-container').html($(self).parent().children('#linked-products').html());
+                $('.instagram-tab #created_at_instagram').text(photo.created_at);
+                $('.instagram-tab #widget-timeline-detail').data('photo-id', photo.photo_id).removeClass('widget-hidden');
+
+				<?php if ($block->escapeHtml($block->getCurrentProductUrl())): ?>
+                $('.widget-detail-shares').show();
+                // share buttons
+                var facebookUrl = 'http://www.facebook.com/sharer/sharer.php?s=100&p[url]=<?=$block->escapeHtml($block->getCurrentProductUrl())?>&p[image]=' + photo.source;
+                $('.widget-facebook-share').attr('href', facebookUrl);
+                var mailUrl = 'mailto:?subject=Checkout our product on Instagram!&body=<?=$block->escapeHtml($block->getCurrentProductUrl())?>';
+                $('.widget-mail-share').attr('href', mailUrl);
+                var twitterUrl = 'http://www.twitter.com/share?url=<?=$block->escapeHtml($block->getCurrentProductUrl())?>&related=magenest&text=Checkout our product on Instagram';
+                $('.widget-twitter-share').attr('href', twitterUrl);
+                var pinterestUrl = 'http://www.pinterest.com/pin/create/button/?url=<?=$block->escapeHtml($block->getCurrentProductUrl())?>&media=' + photo.source + '&description=Checkout our product on Instagram';
+                $('.widget-pinterest-share').attr('href', pinterestUrl);
+				<?php endif; ?>
+            });
+            $('.instagram-tab #widget-detail-close').on('click', function () {
+                $('.instagram-tab #widget-timeline-detail').addClass('widget-hidden');
+            });
+
+            $('.instagram-tab #widget-prev-post').on('click', function () {
+                var photoId = $('.instagram-tab #widget-timeline-detail').data('photo-id');
+                $.map(photos, function (item, index) {
+                    if (item.photo_id === photoId) {
+                        var id = index === 0 ? photos.length : index;
+                        return $('.instagram-details > ul > li#' + photos[id - 1].photo_id + ' > a').trigger('click');
+                    }
+                });
+            });
+            $('.instagram-tab #widget-next-post').on('click', function () {
+                var photoId = $('.instagram-tab #widget-timeline-detail').data('photo-id');
+                $.map(photos, function (item, index) {
+                    if (item.photo_id === photoId) {
+                        var id = index === photos.length - 1 ? -1 : index;
+                        return $('.instagram-details > ul > li#' + photos[id + 1].photo_id + ' > a').trigger('click');
+                    }
+                });
+            });
+
+        })
+	</script>
+	<script type="text/x-magento-init">
+		{
+		    ".instagram-slider":{
+		        "productSlider":{
+		            "arrows":true,
+		            "center":true,
+		            "dots":false,
+		            "draggable":false,
+		            "infinite":true,
+		            "lazyLoad":false,
+		            "slidesToShow":1,
+                    "slidesToScroll":1,
+                    "centerMode": true,
+                    "variableWidth": true,
+                    "centerPadding": "40px",
+                    "prevArrow": "<button type='button' class='slick-prev instagram-prev'><</button>",
+                    "nextArrow": "<button type='button' class='slick-next instagram-next'>></button>",
+                    "responsive": [
+                        {
+                            "breakpoint": 768,
+                            "settings":{
+                                "variableWidth": false
+                            }
+                        }
+                    ]
+		        }
+		    }
+		}
+	</script>
+<?php endif; ?>
+

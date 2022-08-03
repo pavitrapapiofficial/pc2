@@ -1,0 +1,22 @@
+<?php
+/** @var \Magenest\InstagramShop\Block\Instagram\LinkedProducts $block */
+?>
+<div id="linked-products" style="display: none;">
+    <?php foreach ($block->getProductList() as $product) { ?>
+        <?php
+        $productUrl      = $product->getUrlModel()->getUrl($product);
+        $productImageUrl = $block->getProductImageUrl($product)->getUrl();
+        ?>
+        <a class="widget-text-product widget-link-list" data-original-url="<?= $block->escapeHtml($productUrl) ?>"
+           id="product_link_<?= $block->escapeHtml($product->getId()) ?>" target="_blank"
+           data-link-id="<?= $block->escapeHtml($product->getId()) ?>"
+           href="<?= $block->escapeHtml($productUrl) ?>">
+            <img src="<?= $block->escapeHtml($productImageUrl) ?>" width="150px" height="150px" style=""/>
+            <span class="widget-link-text-all">
+                    <span class="widget-link-text-number"></span>
+                    <span class="widget-link-text"><?= $block->escapeHtml($product->getName()) ?></span>
+                </span>
+            <div class="widget-text-product-cta"></div>
+        </a>
+    <?php } ?>
+</div>
