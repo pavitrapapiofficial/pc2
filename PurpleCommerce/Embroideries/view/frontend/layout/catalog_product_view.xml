@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page layout="1column" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="PurpleCommerce_Embroideries::css/embroideries.css" />
+        <link src="PurpleCommerce_Embroideries::js/embroideries.js"/>
+    </head>
+    <body>
+        <referenceBlock name="main.content">
+            <container name="product_view_extra" htmlTag="div">
+                <block class="PurpleCommerce\Embroideries\Block\Catalog\Product\Block\Index" name="catalog.product.view.extra" as="embroideries" template="PurpleCommerce_Embroideries::catalog/product/view/embroideries.phtml">
+                </block>
+            </container>
+        </referenceBlock>
+        <!-- <referenceBlock name="category.product.addto.compare" remove="true" /> -->
+        <referenceBlock name="view.addto.compare" remove="true" />
+        <!-- <move element="catalog.product.related" destination="main.content"  /> -->
+        <move element="product.info.upsell" destination="main.content" after="catalog.product.view.extra" />
+    </body>
+</page>

@@ -1,0 +1,345 @@
+<?php
+namespace PurpleCommerce\CustomAdminEmail\Observer;
+
+use Magento\Framework\Event\Observer as EventObserver;
+use Magento\Framework\Event\ObserverInterface;
+use Magento\Framework\Mail\Template\TransportBuilder;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Store\Model\ScopeInterface;
+use Magento\Customer\Api\GroupRepositoryInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\Data\ShipmentTrackInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
+class NewOrder implements ObserverInterface
+{
+    /**
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+    protected $_logger;
+    protected $_storeManager;
+    protected $_storeInfo;
+    protected $block;
+    public function __construct(
+        TransportBuilder $transportBuilder,
+        ScopeConfigInterface $scopeConfig,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,   
+        \Magento\Framework\Message\ManagerInterface $messageManager,
+        \Magento\Store\Model\Information $storeInfo,   
+        ShipmentRepositoryInterface $shipmentRepository,
+        \Psr\Log\LoggerInterface $logger, 
+        \Magento\Sales\Block\Order\Email\Items $block, 
+        GroupRepositoryInterface $groupRepository
+    ){
+        $this->transportBuilder = $transportBuilder;
+        $this->scopeConfig = $scopeConfig;
+        $this->_logger = $logger;
+        $this->shipmentRepository = $shipmentRepository;
+        $this->_storeManager = $storeManager;
+        $this->block = $block;
+        $this->messageManager = $messageManager;
+        $this->_storeInfo = $storeInfo;
+        $this->groupRepository = $groupRepository;
+    }
+    /**
+     * Get Shipment Trackig data by Shipment Id
+     *
+     * @param $id
+     *
+     * @return ShipmentTrackInterface|null
+     */
+    /**
+     *
+     * @param \Magento\Framework\Event\Observer $observer
+     * @return $this
+     */
+    /** @var $block \Magento\Sales\Block\Order\Email\Items */
+    public function execute(\Magento\Framework\Event\Observer $observer)
+    {
+        
+        $order = $observer->getEvent()->getOrder();
+        $_order=$order;
+
+        $firstname = $order->getCustomerFirstname();
+        $CusEmail = $order->getCustomerEmail();
+        $lastname = $order->getCustomerLastname();
+        $increment_id =$order->getIncrementId();
+        $createdat=$order->getCreatedAt();
+        // echo 'ii - '.$order->getIncrementId();
+        // die;
+        $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+        $scopeConfig = $objectManager->create('\Magento\Framework\App\Config\ScopeConfigInterface');
+        $email = $scopeConfig->getValue('trans_email/ident_support/email',\Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $adminEmail = 'natalie@jacarandaliving.com';
+        $shippingtitle=$order->getShippingDescription();
+        // die;
+        $storeName = $this->_storeManager->getStore()->getName();
+        $phone = $this->_storeManager->getStore()->getPhone();
+        $storeUrl = $this->_storeManager->getStore()->getBaseUrl();
+        if($shippingtitle=='Expedited Shipping'){
+            ?>
+            <?php if ($_order){ ?>
+                <?php $_items = $_order->getAllVisibleItems(); ?>
+                <?php $billingAddress = $_order->getBillingAddress(); ?>
+                <?php $shippingAddress = $_order->getShippingAddress(); 
+                $regionId = $billingAddress->getData('region_id');
+                $region = $billingAddress->getData('region');
+                $postcode = $billingAddress->getData('postcode');
+                $name = $billingAddress->getData('firstname').' '.$billingAddress->getData('lastname');
+                $street = $billingAddress->getData('street');
+                $city = $billingAddress->getData('city');
+                $telephone = $billingAddress->getData('telephone');
+                $company = $billingAddress->getData('company');
+                $country_id = $billingAddress->getData('country_id');
+                //---> shipping details
+                $regionId1 = $shippingAddress->getData('region_id');
+                $region1 = $shippingAddress->getData('region');
+                $postcode1 = $shippingAddress->getData('postcode');
+                $name1 = $shippingAddress->getData('firstname').' '.$shippingAddress->getData('lastname');
+                $street1 = $shippingAddress->getData('street');
+                $city1 = $shippingAddress->getData('city');
+                $telephone1 = $shippingAddress->getData('telephone');
+                $company1 = $shippingAddress->getData('company');
+                $country_id1 = $shippingAddress->getData('country_id');
+                //----->
+                $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+                $regionName = $objectManager->create('Magento\Directory\Model\Region')
+                                        ->load($regionId);
+                $regionName1 = $objectManager->create('Magento\Directory\Model\Region')
+                ->load($regionId1);
+                
+                $payment = $order->getPayment();
+                $method = $payment->getMethodInstance();
+                $methodTitle = $method->getTitle();
+                // echo "abc";
+                // echo "<pre>";
+                // foreach ($_items as $_item){
+                //     echo "<pre>";
+                //     var_dump($_item->debug());
+                //     echo "</pre>";
+                // }
+                // die;
+                ?>
+                <?php 
+                $html='<table style="width: 600px; margin: 0 auto;">
+                <tr>
+                  <td>
+                    <table style="border-collapse:collapse;width:100%">
+                      <tbody>
+                        <tr>
+                          <td
+                            style="vertical-align:top;padding:10px 10px 10px 0;width:50%">
+                            <h3>Billing Info</h3>
+                            <p style="margin-top:0;margin-bottom:10px">'.$name.'<br>
+                            '.$company.'<br>
+                            '.$street.'<br>
+                            '.$region.'<br>
+                            '.$regionName->getData('name').', '.$postcode.'<br>
+                            '.$country_id.'<br>
+                            T: <a href="tel:'.$telephone.'" style="color:#1979c3;text-decoration:none" target="_blank">'.$telephone.'</a>
+                            </p>
+                          </td>
+            
+                          <td
+                            style="vertical-align:top;padding:10px 10px 10px 0;width:50%">
+                            <h3>Shipping Info</h3>
+                            <p style="margin-top:0;margin-bottom:10px">'.$name1.'<br>
+                            '.$company1.'<br>
+                            '.$street1.'<br>
+                            '.$region1.'<br>
+                            '.$regionName1->getData('name').', '.$postcode1.'<br>
+                            '.$country_id.'<br>
+                            T: <a href="tel:'.$telephone1.'" style="color:#1979c3;text-decoration:none" target="_blank">'.$telephone1.'</a>
+                            </p>
+                          </td>
+            
+                        </tr>
+                        <tr>
+                          <td
+                            style="vertical-align:top;padding:10px 10px 10px 0;width:50%">
+                            <h3>Payment Method</h3>
+                            <dl style="margin-top:0;margin-bottom:10px; padding-left: 0;">
+                              <dt style="margin-bottom:5px;margin-top:0;font-weight:400">'.$methodTitle.'</dt>
+                            </dl>
+                          </td>
+            
+                          <td
+                            style="vertical-align:top;padding:10px 10px 10px 0;width:50%">
+                            <h3>Shipping Method</h3>
+                            <p style="margin-top:0;margin-bottom:10px">'.$order->getShippingDescription().'</p>
+                          </td>
+            
+                        </tr>
+                      </tbody>
+                    </table>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <table style="width:100%;border-collapse:collapse;border-spacing:0;max-width:100%;border:1px solid #d1d1d1">
+                      <thead>
+                        <tr>
+                          <th
+                            style="text-align:left;vertical-align:bottom;background-color:#f2f2f2;padding:10px">
+                            Image</th>
+                          <th
+                            style="text-align:left;vertical-align:bottom;background-color:#f2f2f2;padding:10px">
+                            Items</th>
+                          <th
+                            style="vertical-align:bottom;background-color:#f2f2f2;padding:10px;text-align:right">
+                            Price</th>
+                        </tr>
+                      </thead>
+                      <tbody>';?>
+                      
+                      <?php 
+                      
+                      foreach ($_items as $_item){ ?>
+                        <?php //if (!$_item->getParentItem()) : ?>
+                            <?php 
+                            $_imagehelper  = $objectManager->get('\Magento\Catalog\Helper\Image');
+                            if($childProd = current($_item->getChildrenItems())){
+                                $image_url = $_imagehelper->init($childProd->getProduct(), 'category_page_list', array('height' => 156 , 'width'=> 170))->getUrl();
+                                $prodid=$childProd->getProduct()->getId();
+                                $product = $objectManager->create('Magento\ConfigurableProduct\Model\ResourceModel\Product\Type\Configurable')->getParentIdsByChild($prodid);
+                                // echo $product[0];
+                                if(isset($product[0])){
+                                    $product = $objectManager->create('Magento\Catalog\Model\Product')->load($product[0]);
+                                    $image_url = $_imagehelper->init($product, 'product_page_image_small')->setImageFile($product->getImage())->resize(156, 170)->getUrl();
+                                }
+                            }
+                            else{
+                                $image_url = $_imagehelper->init($_item->getProduct(), 'category_page_list', array('height' => 156 , 'width'=> 170))->getUrl();
+                            }
+                                // $_product = $objectManager->get('Magento\Catalog\Model\Product')->load($_item->getProductId());
+
+                                
+                                
+                                // $image_url = $imageHelper->init($_product, 'product_page_image_small')->setImageFile($_product->getImage())->resize(100, 100)->getUrl();
+                                if($_item->getProductOptions()){
+                                    $options = $_item->getProductOptions();  
+                                }
+                                      
+                                
+                            ?>
+                        <?php $html.='<tr>
+                          <td style="vertical-align:top;padding:10px;border-top:1px solid #d1d1d1">
+                            <img
+                              src="'.$image_url.'"
+                              alt="Product Image" style="border:0;height:auto;line-height:100%;outline:none;text-decoration:none"
+                              class="CToWUd"></td>
+                          <td
+                            style="vertical-align:top;padding:10px;border-top:1px solid #d1d1d1">
+                            <p style="margin-top:0;font-weight:700;margin-bottom:5px">'.$_item->getName().'</p>
+                            <p style="margin-top:0;margin-bottom:10px">SKU: '.$_item->getSku().'</p>';
+                                  if (isset($options['options']) && !empty($options['options'])) { 
+                                      $html.='<dl style="margin-top:0;margin-bottom:0;padding-left:0">
+                                      <dt style="font-weight:700;margin-top:0;margin-bottom:0;padding-bottom:0"><strong
+                                          style="font-weight:700"><em style="font-style:italic">Embroideries</em></strong></dt><dd style="margin-top:0;margin-left:0;margin-bottom:0;padding-bottom:0;padding-left:0">';       
+                                    foreach ($options['options'] as $option) {
+                                        $html.=$option['option_value'] . '<br />' . '<br />';
+                                    }
+                                    $html .=' </dd>
+                                            </dl>';
+                                }else{
+                                    $html.='<dl style="margin-top:0;margin-bottom:0;padding-left:0">
+                                      <dt style="font-weight:700;margin-top:0;margin-bottom:0;padding-bottom:0"><strong
+                                          style="font-weight:700"><em style="font-style:italic">Size</em></strong></dt><dd style="margin-top:0;margin-left:0;margin-bottom:0;padding-bottom:0;padding-left:0">'; 
+                                    $product = $_item->getProduct();
+                                    $size = $product->getSize(); // get size value
+                                    if($product->getSize()) {
+                                            $html.= $product->getAttributeText('size'). '<br />' . '<br />'; // get size label  
+                                    }
+                                    $html .=' </dd>
+                                            </dl>';
+                                }
+                            $html .='
+                            Qty:('.$_item->getQtyOrdered().')
+                          </td>
+                          <td
+                            style="vertical-align:top;padding:10px;border-top:1px solid #d1d1d1;text-align:right">
+                            <span>$'.$_item->getPrice().'</span> </td>
+                        </tr>
+                      ';
+                                
+                            ?>
+                        <?php //endif; ?>
+                    <?php } ?>
+                        <?php
+                    $html.=' </tbody> <tfoot>
+                        <tr>
+                          <th colspan="2" scope="row"
+                            style="vertical-align:top;background-color:#f2f2f2;border-top:1px solid #d1d1d1;font-weight:400;padding:10px;text-align:right">
+                            Subtotal </th>
+                          <td
+                            style="vertical-align:top;background-color:#f2f2f2;border-top:1px solid #d1d1d1;padding:10px;text-align:right">
+                            <span style="white-space:nowrap">$'.$order->getSubtotal().'</span> </td>
+                        </tr>
+                        <tr>
+                          <th colspan="2" scope="row"
+                            style="vertical-align:top;background-color:#f2f2f2;border-top:0;font-weight:400;padding:10px;text-align:right;padding-top:0">
+                            Shipping &amp; Handling </th>
+                          <td
+                            style="vertical-align:top;background-color:#f2f2f2;border-top:0;padding:10px;text-align:right;padding-top:0">
+                            <span style="white-space:nowrap">$'.$order->getShippingAmount().'</span> </td>
+                        </tr>
+                        <tr>
+                          <th colspan="2" scope="row"
+                            style="vertical-align:top;background-color:#f2f2f2;border-top:0;font-weight:400;padding:10px;text-align:right;padding-top:0">
+                            <strong style="font-weight:700">Grand Total</strong> </th>
+                          <td
+                            style="vertical-align:top;background-color:#f2f2f2;border-top:0;padding:10px;text-align:right;padding-top:0">
+                            <strong style="font-weight:700"><span style="white-space:nowrap">$'.$order->getGrandTotal().'</span></strong> </td>
+                        </tr>
+                      </tfoot>
+                    </table>
+                  </td>
+                </tr>
+              </table>';
+                    ?>
+                    
+                    
+                
+            <?php } ?>
+            
+            <?php
+            // echo $html;
+            // die;
+            $this->_logger->debug('nitin'); 
+            $this->_logger->debug($html); 
+            $groupVariables = [
+                'first_name' => 'nit',
+                'store_name' => $storeName,
+                'accountUrl' => $storeUrl.'customer/account',
+                'phone' => $phone,
+                'increment_id'=> $increment_id,
+                'storeurl' => $storeUrl,
+                'email' => $email,
+                'html'=>$html,
+                'created_at'=>$createdat,
+                'customerEmail' => $CusEmail,
+                'forgeturl' => $storeUrl.'customer/account/createPassword/'
+            ];
+    
+    
+            $email = $this->scopeConfig->getValue('trans_email/ident_general/email',ScopeInterface::SCOPE_STORE);
+            $name  = $this->scopeConfig->getValue('trans_email/ident_general/name',ScopeInterface::SCOPE_STORE);
+            
+            $postObject = new \Magento\Framework\DataObject();
+            $postObject->setData($groupVariables);
+            
+            $transport = $this->transportBuilder
+                ->setTemplateIdentifier('13')
+                ->setTemplateOptions(['area' => \Magento\Framework\App\Area::AREA_FRONTEND, 'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID])
+                ->setTemplateVars(['order' => $postObject])
+                ->setFrom(['name' => $name,'email' => $email])
+                ->addTo($adminEmail)
+                ->addCc('info@jacarandaliving.com')
+                ->getTransport();
+            $message = '';
+            $transport->sendMessage();
+        }
+            
+        return $this;
+    }
+}

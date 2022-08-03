@@ -1,0 +1,141 @@
+<h2>Module enabled</h2>
+<?php
+
+//Get Auth/Admin User
+$blockObj= $block->getLayout()->createBlock('PurpleCommerce\Embroideries\Block\Index');
+$newData = $blockObj->getCategory();
+// echo '<pre>';
+// print_r($newData);
+$jsonObj = json_encode($newData);
+echo $jsonObj;
+$blockObj->getCustomerGroup();
+//update custom variable value;
+$blockObj->setVariableValue($jsonObj);
+
+
+$jsonval = $this->getVariableValue();
+// echo '<pre>';
+$arr = json_decode($jsonval);
+// print_r();
+// foreach ($categoryProducts as $product) {
+//     echo $product->getName() . ' - ' . $product->getProductUrl() . '<br />';
+// }
+?>
+<style>
+        .product-tabs {
+        border-top: 1px solid #a9a7a8;
+        width: 100%;
+        /* background: #f2f2f2 url(../images/bkg_tabs.gif) 0 100% repeat-x; */
+        }
+        ul{
+                list-style:none;
+        }
+        .product-tabs li {
+        float: left;
+        font-size: 1.1em;
+        line-height: 1em;
+        padding: 10px 20px 10px 0px;
+        }
+</style>
+<script>
+        require(['jquery'], function ($) { 
+                function loadOptions(catId, pId)
+                {
+                        var nextLink = '';
+                        var divOpener = '';
+                        var optHtml = '';
+                        var divClosure = '';
+                        var nextLink = '';
+                        var offset = parseInt('12');
+                        var bandHeight = '370px';
+
+                        if($$('#product_tabs_'+catId+'_contents div.scrollable').length)
+                        {
+                                return false;
+                        }
+                        else
+                        {
+                        
+                        var reloadurl = 'http://old.jacarandaliving.com/catalog/options/load/';
+                        Element.show('loadingmask_'+catId);
+                        new Ajax.Request(reloadurl, {
+                        method: 'post',
+                        parameters: {'cId':catId,'pId':pId,'form_key':'osdoiwiksdik'},
+                        onComplete: function(transport) {
+                        Element.hide('loadingmask_'+catId);
+                        $('product_tabs_'+catId+'_contents').innerHTML = "";
+                        var json = transport.responseText.evalJSON();
+                        var json = eval( "(" + transport.responseText + ")" );
+                        if(json.error)
+                        {
+                                alert(json.response.error);
+                        }
+                        else
+                        {
+                                
+                                if(json.response.length > offset)
+                                {
+                                        prevLink = '<a class="prev browse left" style="display:none">previous</a>';
+                                }
+                                else
+                                {
+                                        prevLink = '';
+                                }
+                                divOpener = '<div class="scrollable" style="min-height:'+bandHeight+'"><div class="items">';	
+                                
+                                for (var index = 0; index < json.response.length; ++index) {
+                                        if(index%offset==0)
+                                        {
+                                                optHtml += '<div class="band">';
+                                        }
+                                        
+                                        if((index)%6==0)
+                                        {
+                                                optHtml += '<ul>';
+                                        }
+                                        
+                                        optHtml += '<li id="cust'+json.response[index].imageId+'" class="'+json.response[index].cls+'" rel="'+json.response[index].liRel+'">';
+                                        
+                                        path = json.response[index].imageUrl;
+                                        
+                                        fDir = path.charAt(0);
+                                        sDir = path.charAt(1);
+                                        
+                                        optHtml += '<img rel="'+json.response[index].rel+'" src="http://old.jacarandaliving.com/media/catalog/product/resized/'+json.response[index].imageUrl+'" class="option_image" id="'+json.response[index].imageId+'"/><div class="selected"><img alt="selected" src="http://old.jacarandaliving.com/skin/frontend/default/modern/'+'images/selectIcon.gif"></div><div class="tmb"><input type="checkbox" rel="'+json.response[index].rel+'" class="option_checkbox checkbox" value="'+json.response[index].checkBoxValue+'" style="display: none;"><span class="label" style="width:130px"><label for="'+json.response[index].rel+'"><a class="zoomer" href="http://old.jacarandaliving.com/media/catalog/product/resized/designs/'+json.response[index].imageUrl+'" rel="http://old.jacarandaliving.com/media/catalog/product/resized/designs/'+json.response[index].imageUrl+'" title="'+json.response[index].title+'" style="color:#B0B0B0"><img src="http://old.jacarandaliving.com/skin/frontend/default/modern/images/maginifier.jpg" alt="zoom"/></a>'+json.response[index].title+'</label></span></div><div style="clear:both; height:1px; overflow:hidden;"></div>';
+                                        
+                                        optHtml +='</li>';
+                                        
+                                        
+                                        if ((index+1)%6==0 || (index+1)==json.response.length)
+                                        {
+                                                optHtml += '</ul>';
+                                        }
+                                        if ((index+1)%offset==0 || (index+1)==json.response.length)
+                                        {
+                                                optHtml += '</div>';
+                                        }
+                                        
+                                }
+                                
+                                divClosure = '</div></div>';
+                                
+                                if(json.response.length > offset)
+                                {
+                                        nextLink = '<a class="next browse right">next</a>';
+                                }
+                                else
+                                {
+                                        nextLink ='';
+                                }
+                                $('product_tabs_'+catId+'_contents').innerHTML = prevLink+divOpener+optHtml+divClosure+nextLink;
+                                
+                        }
+                        }
+                        });
+                        
+                        }
+                }
+        });
+</script>
+
+           

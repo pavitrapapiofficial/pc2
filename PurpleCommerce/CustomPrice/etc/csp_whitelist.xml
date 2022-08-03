@@ -1,0 +1,100 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="default-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+		<value id="fb" type="host">connect.facebook.net</value>
+		<value id="google" type="host">fonts.googleapis.com</value>
+		<value id="tp" type="host">widget.trustpilot.com</value>
+		<value id="insta" type="host">*.cdninstagram.com</value>
+				<value id="yotpo" type="host">*.yotpo.com</value>
+            </values>
+        </policy>
+	<policy id="connect-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="fb" type="host">*.facebook.net</value>
+                <value id="fb1" type="host">*.facebook.com</value>
+                <value id="google" type="host">fonts.googleapis.com</value>
+                <value id="tp" type="host">widget.trustpilot.com</value>
+                <value id="ga" type="host">www.google-analytics.com</value>
+                <value id="ga-dg" type="host">stats.g.doubleclick.net</value>
+                <value id="apay" type="host">apay-us.amazon.com</value>
+                <value id="payments" type="host">payments.amazon.com</value>
+                <value id="amz" type="host">static-na.payments-amazon.com</value>
+				<value id="yotpo" type="host">*.yotpo.com</value>
+            </values>
+        </policy>
+        <policy id="media-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="google" type="host">fonts.googleapis.com</value>
+		<value id="insta" type="host">*.cdninstagram.com</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="google" type="host">fonts.igoogleapis.com</value>
+                <value id="yotpo" type="host">*.yotpo.com</value>
+                <value id="google" type="host">fonts.googleapis.com</value>
+	   </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+				<value id="google" type="host">fonts.googleapis.com</value>
+                <value id="gstatic" type="host">fonts.gstatic.com</value>
+                <value id="yotpo" type="host">*.yotpo.com</value>
+            </values>
+        </policy>
+ 	<policy id="script-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="fb" type="host">connect.facebook.net</value>
+                <value id="gstat" type="host">www.gstatic.com</value>
+                <value id="ggl" type="host">www.google.com</value>
+                <value id="tp" type="host">*.trustpilot.com</value>
+                <value id="yotpo" type="host">*.yotpo.com</value>
+                <value id="amazonpay" type="host">*.payments-amazon.com</value>
+            </values>
+        </policy>
+	<policy id="img-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="fb" type="host">www.facebook.com</value>
+                <value id="insta" type="host">*.cdninstagram.com</value>
+                <value id="yotpo" type="host">*.yotpo.com</value>
+                <value id="googlecom" type="host">*.google.com</value>
+                <value id="googlein" type="host">*.google.co.in</value>
+                <value id="amzcf" type="host">*.cloudfront.net</value>
+           </values>
+        </policy>
+	<policy id="frame-src">
+            <values>
+                <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="fb" type="host">connect.facebook.net</value>
+                <value id="googlefonts" type="host">fonts.googleapis.com</value>
+                <value id="google" type="host">www.google.com</value>
+                 <value id="fb" type="host">www.facebook.com</value>
+                <value id="tp" type="host">widget.trustpilot.com</value>
+                <value id="ga" type="host">www.gstatic.com</value>
+            </values>
+        </policy>
+    <policy id="manifest-src">
+        <values>
+            <value id="bunny" type="host">*.b-cdn.net</value>
+			<value id="yotpo" type="host">*.yotpo.com</value>
+        </values>
+    </policy>
+    <policy id="form-action">
+        <values>
+	            <value id="bunny" type="host">*.b-cdn.net</value>
+                <value id="fb" type="host">www.facebook.com</value>
+                <value id="pc" type="host">*.jacarandaliving.com</value>
+        </values>
+    </policy>
+    
+    </policies>
+</csp_whitelist>

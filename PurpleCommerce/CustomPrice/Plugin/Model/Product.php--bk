@@ -1,0 +1,70 @@
+<?php
+ 
+namespace PurpleCommerce\CustomPrice\Plugin\Model;
+ 
+class Product
+{
+    // protected $_customerSession;
+
+    // public function __construct(
+    //     \Magento\Framework\View\Element\Template\Context $context,
+    //     \Magento\Customer\Model\Session $customerSession,
+    //     array $data = []
+        
+    // ) {
+    //     parent::__construct($context, $data);
+    //     $this->_customerSession = $customerSession;
+    // }
+    public function afterGetPrice(\Magento\Catalog\Model\Product $subject, $result)
+    {   
+        // if($his->getCustomerGroup!=2)
+        $om = \Magento\Framework\App\ObjectManager::getInstance(); 
+        $customerSession = $om->get('Magento\Customer\Model\Session'); 
+        $customerData = $customerSession->getCustomer()->getData(); //get all data of customerData
+        $customerDataGid = $customerSession->getCustomer()->getGroupId();//get id of customer
+
+        $_product = $om->get('Magento\Framework\Registry')->registry('current_product');
+        if(!empty($_product)){
+            $orgprice = $result;
+            $specialprice = $_product->getSpecialPrice();
+            $specialfromdate = $_product->getSpecialFromDate();
+            $specialtodate = $_product->getSpecialToDate();
+            $today = time();
+            if (!$specialprice){
+                $specialprice = $orgprice;
+                if($customerDataGid!=2)
+                    return $result * 2.25;
+                else
+                    return $result;
+            }
+            
+            if ($specialprice< $orgprice) {
+                if ((is_null($specialfromdate) &&is_null($specialtodate)) || ($today >= strtotime($specialfromdate) &&is_null($specialtodate)) || ($today <= strtotime($specialtodate) &&is_null($specialfromdate)) || ($today >= strtotime($specialfromdate) && $today <= strtotime($specialtodate))) {
+                    // $result = $specialprice;
+                    if($customerDataGid!=2)
+                        return $specialprice * 2.25;
+                    else
+                        return $specialprice;
+                    // echo 'product has a special price';
+                }
+            }
+        }else{
+            if($customerDataGid!=2)
+                return $result * 2.25;
+            else
+                return $result;
+        }
+        
+
+
+
+        
+        // else
+        // return $result;
+    }
+    // public function getCustomerGroup(){
+    //     if($this->_customerSession->isLoggedIn()):
+    //         echo $customerGroup=$this->_customerSession->getCustomer()->getGroupId();
+    //     endif;
+    // }
+}

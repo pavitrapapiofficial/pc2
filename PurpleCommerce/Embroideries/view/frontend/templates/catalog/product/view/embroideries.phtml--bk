@@ -1,0 +1,125 @@
+<!-- <div>
+    <a class="customButton" href="#" id="click-me">Add Embroideries</a>
+    
+</div> -->
+
+<!-- <div id="popup-modal" style="display:none;"> -->
+    
+
+<?php
+// echo "loaded";
+// echo $date = date('Y-m-d H:i:s').'<br/>';
+// echo $date2 = date('Y-m-d H:i:s', strtotime('-4 hour'));
+// $date3= '2020-09-23 19:48:35';
+
+// echo $dateFromDatabase = strtotime("2020-09-29 19:48:35").'<br/>';
+// echo $dateTwelveHoursAgo = strtotime("-24 hours");
+
+// if ($dateFromDatabase >= $dateTwelveHoursAgo) {
+//  echo   "less than 12 hours ago";
+// }
+// else {
+//   echo " more than 12 hours ago";
+// }
+// die;
+$currentProduct = $block->getCurrentProduct();
+// var_dump($currentProduct);
+if ($currentProduct = $block->getCurrentProduct()) {
+    if(!empty($currentProduct->getData('no_of_designs'))){
+        // echo 'Embroideries enabled';
+        $block->ifWholeSaleCustomer();
+        $embJson = $block->getEmbroideriesJson();
+        $arr = json_decode($embJson,true);
+        // echo  '<pre>';
+        // print_r($arr);
+        ?>
+            <div class="design-options">
+
+                <h2 style="padding-top:30px;text-align:left">Select other embroideries</h2>
+                <p id="select_design_message" style="display: none;">
+                To order, click on your design selection then place the order 1 design(s) at a time. Repeat for additional selections. Double click to remove the selected design.</p>
+                <ul class="product-tabs">
+                    <?php 
+                        foreach($arr as $k=>$v){
+                            
+                            echo '<li id="product_tabs_'.$v["catid"].'" class="first"><a href="javascript:void(0)" onclick="showdiv('.$v["catid"].')">'.ucfirst($k).'</a></li>';
+                            
+                        }
+                    ?>
+                </ul>
+                <?php 
+                    foreach($arr as $k=>$v){
+                            $cId = $v["catid"];
+                            // $node = $arr[$k];
+                            $catname= $k;
+                            // echo $node;
+                            // echo count($arr[$catname]);
+                            // die;
+                        echo $htmlDiv = '
+                        <div class="product-tabs-content" id="product_tabs_'.$v["catid"].'_contents" style="display:none">
+			
+                            <a class="prev browse left" style="display: none;">previous </a>
+                                <div class="scrollable">   
+                                    <div class="items">
+                                        <div class="band">
+                                            <ul>';
+                                                // $i = 0;
+                                                // foreach ($v as $j=>$val){
+                                                    // echo $j;
+                                                for($i=0;$i<count($arr[$catname])-1;$i++){
+                                                    $node=$arr[$catname];
+                                                    // echo "here".$node;
+                                                
+                                                // die;
+                                                    // if($j!='catid'){
+                                                        // echo $v[$j]['prodid'].'<br/>';
+                                                        // echo $v[$j]['prodname'].'<br/>';
+                                                    echo $html ='
+                                                        <li id="cust'.$i.'" rel="'.$node[$i]["prodid"].'">
+                                                                
+                                                    <img id="'.$i.'" class="option_image" src="'.$node[$i]["prodImage"].'" rel="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                    
+                                                    <div class="selected" id="tick_'.$node[$i]["prodid"].'_'.$cId.'"><img src="http://old.jacarandaliving.com/skin/frontend/default/modern/images/selectIcon.gif" alt="selected"></div>
+                                                    <div class="tmb"><input style="display:none" type="checkbox" value="436483" class="option_checkbox checkbox" rel="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                                    <span class="label" style="width:130px"><label for="options_'.$node[$i]["prodid"].'_'.$cId.'"><a class="jqzoom" href="'.$node[$i]["prodImage"].'" title="" style="color:#B0B0B0">
+                                                    <div class="con" id="'.$node[$i]["prodid"].'">
+                                                    <img class="thumbnail" id="thumbnail_'.$node[$i]["prodid"].'" src="http://old.jacarandaliving.com/skin/frontend/default/modern/images/maginifier.jpg" alt="zoom">
+                                                    <img class="hidden-large" id="hidden-large_'.$node[$i]["prodid"].'" src="'.$node[$i]["prodImage"].'">
+                                                    </div>
+                                                    </a>'.$node[$i]["prodname"].'</label></span></div>
+                                                    <div style="clear:both; height:1px; overflow:hidden;"></div>
+                                                </li>';
+                                                    // $i++;
+                                                    // }
+                                                    
+                                                }
+                                            echo $htmlfooter='</ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                        ';
+                    }
+                    // echo $html;
+                ?>
+                
+            <!-- </div> -->
+            <div id='isselected'>
+                    <ul>
+                        <li><img src="http://15.206.147.240/JL_design/pub/media/catalog/product/k/t/ktpk_kite_teddy_pink_6zcrcni2txduwbiv.jpg" /></li>
+                        <li><img src="http://15.206.147.240/JL_design/pub/media/catalog/product/d/e/dest_dot_elephant_stone_asi0yoqfc2xtl68c.jpg" /></li>
+                    </ul>
+            </div>
+            <a class="customButton" href="#" id="uncheck" style="display:none">Unchek All</a>
+        <?php
+    }
+    else{
+        echo 'No of design is null';
+    }
+    
+}
+?>
+</div>
+
+

@@ -1,0 +1,13 @@
+
+<?php 
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
+    $customerSession = $objectManager->get('Magento\Customer\Model\Session');?>
+
+ <?php if($customerSession->isLoggedIn()){?>       
+    <li><a class='customer-account' href="<?php echo $this->getUrl('customer/account/') ?>">My Account</a></li>     
+    <li><a class='customer-logout' href="<?php echo $this->getUrl('customer/account/logout') ?>">Logout</a></li>
+ <?php }else{ ?>
+     <li class='auth-login'><a  href="<?php echo $this->getUrl('customer/account/login') ?>">Login</a></li> 
+     <li class="whole-lis"><a href="<?php echo $this->getUrl('wholesaler/index/') ?>" class="wholesaler-login">wholesalers</a></li> 
+ <?php }  ?>
+

@@ -1,0 +1,18 @@
+<!--<fieldset class="fieldset create account" data-hasrequired="<?php /* @escapeNotVerified */ /*echo __('* Required Fields')*/ ?>">
+    <legend class="legend"><span><?php /* @escapeNotVerified */ /*echo __('Additional Information')*/ ?></span></legend>-->
+    
+    <div class="field required">
+        <label for="business_name" class="label"><span><?php /* @escapeNotVerified */
+                echo __('Business Name') ?></span></label>
+        <div class="control">
+            <input type="text" name="business_name" id="business_name" title="<?php /* @escapeNotVerified */ echo __('Business Name') ?>" class="input-text" data-validate="{required:true}" aria-required="true">
+        </div>
+    </div>
+    <div class="field required">
+        <label for="description" class="label"><span><?php /* @escapeNotVerified */
+                echo __('Brief Description Of How You Will Sell Our Products (Please Include Your Tax ID):') ?></span></label>
+        <div class="control">
+            <textarea name="description" id="description" title="<?php /* @escapeNotVerified */ echo __('Description') ?>" class="input-text" data-validate="{required:true}" aria-required="true"></textarea>
+        </div>
+    </div>
+<!--</fieldset>-->

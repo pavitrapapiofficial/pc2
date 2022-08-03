@@ -1,0 +1,80 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/** @var \Magento\Customer\Block\Account\Dashboard\Info $block */
+?>
+<?php
+//ini_set("display_errors","1");
+$customerGroupId = $block->getCustomer()->getGroupId();
+?>
+<div class="custom-account-container">
+    <h1>My Account</h1>
+    <div class="account-container-inner">
+      <div class="account-container-item">
+        <div class="account-image">
+          <img src="https://www.jacarandaliving.com/pub/media/account-one-image.png" alt="">
+        </div>
+        <h2>Account Detail</h2>
+        <ul>
+          <li><a href=<?= $block->escapeUrl($block->getChangePasswordUrl()) ?>" class="action change-password">Change Password</a></li>
+          <li><a href="<?= $block->escapeUrl($block->getUrl('customer/address/edit')) ?>">Manage Addresses</a></li>
+        </ul>
+      </div>
+      <div class="account-container-item">
+        <div class="account-image">
+          <img src="https://www.jacarandaliving.com/pub/media/account-two-image.png" alt="">
+        </div>
+        <h2>Orders &amp; Returns</h2>
+        <ul>
+          <li><a href="<?= $block->escapeUrl($block->getUrl('sales/order/history')) ?>">Order History</a></li>
+          <li><a href="<?= $block->escapeUrl($block->getUrl('returns')) ?>">Return FAQ</a></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+<div id="popup-modal" style="display:none;">
+   
+    <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('wholesaler_login_popup')->toHtml() ?>
+</div>
+<?php
+if($customerGroupId==2 && isset($_REQUEST['wholesale']))
+{
+?>
+<script>
+    require(
+        [
+            'jquery',
+            'Magento_Ui/js/modal/modal'
+        ],
+        function(
+            $,
+            modal
+        ) {
+            var options = {
+                type: 'popup',
+                responsive: true,
+                innerScroll: true,
+                title: '',
+                buttons: [{
+                    text: $.mage.__('Continue'),
+                    class: '',
+                    click: function () {
+                        this.closeModal();
+                    }
+                }]
+            };
+
+            var popup = modal(options, $('#popup-modal'));
+
+            $('#popup-modal').modal('openModal');
+        }
+    );
+</script>
+
+   
+<?php } ?>

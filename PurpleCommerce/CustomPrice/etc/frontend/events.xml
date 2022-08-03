@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="checkout_cart_product_add_after">
+    		<observer name="set_custom_price_after_add_to_cart" instance="PurpleCommerce\CustomPrice\Observer\CustomPrice" />
+    </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="update_item_after" instance="PurpleCommerce\CustomPrice\Observer\UpdateItem" />
+    </event>
+    <event name="checkout_cart_save_after">
+        <observer name="update_items_after" instance="PurpleCommerce\CustomPrice\Observer\UpdateItemPrice" />
+    </event>
+</config>

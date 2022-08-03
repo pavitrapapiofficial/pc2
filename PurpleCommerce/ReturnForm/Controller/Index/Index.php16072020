@@ -1,0 +1,168 @@
+<?php declare(strict_types=1);
+
+
+namespace PurpleCommerce\ReturnForm\Controller\Index;
+
+
+use Magento\Framework\Controller\ResultFactory;
+
+class Index extends \Magento\Framework\App\Action\Action
+{
+    //const XML_PATH_EMAIL_RECIPIENT = 'trans_email/ident_general/email';
+    const XML_PATH_EMAIL_RECIPIENT = 'manisha.sain@purplecommerce.com';
+    protected $_transportBuilder;
+    protected $inlineTranslation;
+    protected $scopeConfig;
+    protected $storeManager;
+    protected $_escaper;
+    
+    public function __construct(
+        \Magento\Framework\Mail\Template\TransportBuilder $transportBuilder,
+		\Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
+		\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+		\Magento\Store\Model\StoreManagerInterface $storeManager,
+		\Magento\Framework\Escaper $escaper,
+            \Magento\Framework\App\Action\Context $context,
+		\Magento\Framework\View\Result\PageFactory $pageFactory
+    ) {
+		$this->_transportBuilder = $transportBuilder;
+		$this->inlineTranslation = $inlineTranslation;
+		$this->scopeConfig = $scopeConfig;
+		$this->storeManager = $storeManager;
+		$this->_escaper = $escaper;
+                $this->_pageFactory = $pageFactory;
+		return parent::__construct($context);
+	}
+        
+        
+    public function execute()
+    {
+        ini_set("display_errors","1");
+        // 1. POST request : Get booking data
+        $post = (array) $this->getRequest()->getPost();
+
+        if (!empty($post)) {
+            // Retrieve your form data
+//            $firstname   = $post['firstname'];
+//            $lastname    = $post['lastname'];
+//            $phone       = $post['phone'];
+//            $bookingTime = $post['bookingTime'];
+
+            // Doing-something with...
+        $name = $_REQUEST['name'];
+        $email = $_REQUEST['email'];
+        $orderno = $_REQUEST['orderno'];
+        $telephone = $_REQUEST['telephone'];
+        $products = $_REQUEST['productname'];
+        $productsqty = $_REQUEST['productqty'];
+        $reason = $_REQUEST['Reason'];
+        $comment = $_REQUEST['comment'];
+        $produc_html ='';
+        if(count($products)>0){
+            foreach ($products as $key => $product_name) {
+                $produc_html .="<div><span class='nameproduct'><b>Product name :</b></span><span class='productvalue'>$product_name</span><span class='qtycl'><b>&nbsp;Quantity :</b></span><span class='qtyval'>$productsqty[$key]</span></div>"; 
+            }
+        }
+        $html='';
+			$html.='<div style="background:#ddd;text-align:center;font-family:helvetica,arial,verdana,sans-serif;font-size:16px;line-height:22px;color:#222">
+				<div style="padding:30px">
+					<div style="margin:0 auto;width:96%;max-width:540px;background:white;text-align:left;padding:1% 2%;border-radius:8px">
+						<div style="width:100%;"><img style="width:100%;" src="https://www.jacarandaliving.com/skin/frontend/default/modern/images/logonew.png" alt="Jacaranda Living"></div>
+						<h2 style="font-size:20px;text-align:center;border-bottom:1px solid #ccc;color:black;margin:10px 0;padding:0 0 5px 0"><b>Shipping &amp; Returns</b></h2><br>
+						<b>Name</b><br>'.$name.'<br><br>
+						<b>Order No</b><br>'.$orderno.'<br><br>
+						<b>Email Id</b><br>'.$email.'<br><br>
+						<b>Phone</b><br>'.$telephone.'<br><br>';
+                               // if(count($products)>0){
+                                       //foreach ($products as $key => $product_name) {
+                                           //$html .="<b>Prouct name</b><br>$product_name<br><br>"; 
+                                     //  }
+                                  // }
+                                $html.=$produc_html;
+                                $html.='<br><br><b>Reason</b><br>'.$reason.'<br><br>';
+                                $html.='<b>Comment</b><br>'.$comment.'<br><br>';
+                        $html.='
+					</div>
+				</div>
+			</div>';
+                        //$html.=$produc_html;
+			
+			$content['send_to_email']=array('manisha.sain@purplecommerce.com');
+			$content['send_to_name']='Manisha';
+			$content['orderno'] = $orderno;
+			$content['contents']=$html;
+			
+			$this->sendmessage(6,$content);
+                        //echo "success";
+                        //die;
+            // Display the succes form validation message
+            $this->messageManager->addSuccessMessage('Booking done !');
+
+            // Redirect to your form page (or anywhere you want...)
+            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+            $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+
+            return $resultRedirect;
+        }
+        // 2. GET request : Render the booking page 
+        $this->_view->loadLayout();
+        $this->_view->renderLayout();
+    }
+    
+    public function sendmessage($templateId,$content){
+		try{
+                  echo "Inside sendmessage";  
+                //$to_name = Mage::getStoreConfig('trans_email/ident_general/name');
+                //$to_mail = Mage::getStoreConfig('trans_email/ident_general/email');
+                $to_name = "Jacarandaliving";
+                //$to_mail = 'info@jacarandaliving.com';
+                $to_mail = 'manisha.sain@purplecommerce.com';
+                
+                $email_id=$to_mail;
+                $content['send_to_name'] = $to_name;
+                //$email_id = 'shadab.reza@purplecommerce.com';
+                
+               
+//		$translate_Clident = Mage::getSingleton('core/translate');
+//		$translate_Clident->setTranslateInline(false);
+//		$sender_Clident = array('name' =>$to_name,'email' =>$email_id);
+//		$sendToClident[]=$email_id;
+//		$templateEmail_Clident=Mage::getModel('core/email_template');
+//		$templateEmail_Clident
+//			->setDesignConfig(array('area'=>'frontend', 'store'=>0))
+//            ->sendTransactional($templateId,$sender_Clident,$sendToClident,$content['send_to_name'],$content);
+//                    $translate_Clident->setTranslateInline(true);
+                
+                $error = false;
+
+                $sender = [
+                        'name' => $this->_escaper->escapeHtml($to_name),
+                        'email' => $this->_escaper->escapeHtml($to_mail),
+                ];
+                
+                $data = ['contents' => $content['contents']];
+//                            
+                $postObject = new \Magento\Framework\DataObject();
+                $postObject->setData($data);
+                $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE; 
+                $transport = 
+                        $this->_transportBuilder
+                        ->setTemplateIdentifier($templateId) // Send the ID of Email template which is created in Admin panel
+                        ->setTemplateOptions(
+                                ['area' => \Magento\Framework\App\Area::AREA_FRONTEND, // using frontend area to get the template file
+                                'store' => \Magento\Store\Model\Store::DEFAULT_STORE_ID,]
+                        )
+                        //->setTemplateVars(['data' => $postObject])
+                        ->setTemplateVars(['contents'=>$postObject])
+                        ->setFrom($sender)
+                        ->addTo('manisha.sain@purplecommerce.com')
+                        ->getTransport();
+                $transport->sendMessage();
+                $this->inlineTranslation->resume();
+                } catch (Exception $ex) {
+                    echo $ex->getMessage();
+                }
+		
+	}
+}
+

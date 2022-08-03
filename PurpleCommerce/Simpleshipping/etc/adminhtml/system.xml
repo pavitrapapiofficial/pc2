@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="carriers">
+            <group id="freeshipping">
+                <field id="free_shipping_subtotal" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Minimum Order Amount (for non wholesale customers)</label>
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>
+                <field id="free_shipping_subtotal_wholesale" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Minimum Order Amount (for wholesale customers)</label> <!-- Custom label -->
+                    <validate>validate-number validate-zero-or-greater</validate>
+                </field>  
+            </group>
+        </section>
+    </system>
+</config>

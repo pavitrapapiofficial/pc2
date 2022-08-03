@@ -1,0 +1,7 @@
+<?php $customerData = $block->checkCustomerLogin(); 
+if($customerData==2){
+	//echo "Inside Condition";
+?>
+
+<a href="https://www.jacarandaliving.com/requestformpost/ajax/ajax" class="whole_price1" id="whole_price1" >Wholesale Price</a>
+<?php } ?>

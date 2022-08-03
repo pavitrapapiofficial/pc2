@@ -1,0 +1,70 @@
+<script src="https://www.google.com/recaptcha/api.js?render=6LehNPcZAAAAAMKaV4jH-h7jcfoJYTyztRDzxYR-"></script>
+<div class="jacranda-return-form-sections">
+<div class="container-return">
+<h3>Prepaid Mailing Label</h3>
+<p>Please ensure you mention email id and contact <br>number as entered while placing the order</p>
+<div class="mails-forms"><form id="contactForm1" action="<?php echo $this->getFormAction(); ?>" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+                             data-mage-init='{"validation":{}}' method="post">
+<div class="return-field">
+<div class="return-lable">Your Name</div>
+<div class="return-input"><input id="name" tabindex="1" name="name" type="text" data-validate="{'required':true}"></div>
+</div>
+<div class="return-field">
+<div class="return-lable">Order No.</div>
+<div class="return-input"><input id="orderno" tabindex="1" name="orderno" required="true" type="text"></div>
+</div>
+<div class="return-field">
+<div class="return-lable">E-mail Address</div>
+<div class="return-input"><input id="email" tabindex="1" name="email" type="text" data-validate="{'required':true, 'email':true}"></div>
+</div>
+<div class="return-field">
+<div class="return-lable">Phone No.</div>
+<div class="return-input"><input id="telephone" tabindex="1" name="telephone" type="text" data-validate="{'required':true, 'digits':true}"></div>
+</div>
+<div class="return-field nameqtys">
+<div class="return-division pls">
+<div class="return-left">
+<div class="return-lable">Product Name</div>
+<div class="return-input"><input tabindex="1" name="productname[]" type="text" data-validate="{'required':true}"></div>
+</div>
+<div class="return-right">
+<div class="return-lable">Qty.</div>
+<div class="return-input"><input tabindex="1" name="productqty[]" type="text" data-validate="{'required':true}"></div>
+</div>
+<div id="addrowclick" class="plus-increament" title="Add another item">+</div>
+</div>
+<div class="return-field">
+<div class="return-lable">Reason for return</div>
+<div class="return-input"><select name="Reason" data-validate="{'required':true}">
+<option>Sizing</option>
+<option>Not as expected</option>
+<option>Changed mind</option>
+</select></div>
+</div>
+<div class="return-field">
+<div class="return-lable">Write your comment here</div>
+<div class="return-input"><textarea id="comment" name="comment"></textarea></div>
+</div>
+<button name="submit" type="submit">Submit</button></div>
+</form></div>
+</div>
+</div>
+<script>
+     require(['jquery'], function ($) {
+        
+        $('#contactForm1').submit(function(e) {
+           
+               e.preventDefault();
+		        grecaptcha.ready(function() {
+		        	console.log("Inside grecaptcha ready");
+		          grecaptcha.execute('6LehNPcZAAAAAMKaV4jH-h7jcfoJYTyztRDzxYR-', {action: 'submit'}).then(function(token) {
+		          	console.log("After grecaptcha ready");
+		              jQuery('#contactForm1').prepend('<input type="hidden" name="token" value="' + token + '">');
+		              jQuery('#contactForm1').unbind('submit').submit();
+		          });
+		        });
+
+               
+        });
+     });
+</script>

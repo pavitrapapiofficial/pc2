@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="empty" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<head>
+    <css src="PurpleCommerce_Embroideries::css/embroideries.css" />
+</head>
+    <referenceContainer name="content">
+        <block class="PurpleCommerce\Embroideries\Block\Index" name="embroideries_index_index" template="PurpleCommerce_Embroideries::index/index.phtml"/>
+    </referenceContainer>
+    <referenceContainer name="header.container" remove="true" />
+    <referenceContainer name="footer.container" remove="true" />
+    <referenceContainer name="footer" remove="true" />
+    <referenceBlock name="copyright" remove="true"/>
+</page>

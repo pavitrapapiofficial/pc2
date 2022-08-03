@@ -1,0 +1,29 @@
+
+<?php 
+    $blockObj= $block->getLayout()->createBlock('PurpleCommerce\Wholesale\Block\Index\Index');
+    $cus=$blockObj->getCustomer();
+    // echo "ccid->". $cus->getCustomer()->getId(); 
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
+    $customerSession = $objectManager->get('Magento\Customer\Model\Session');
+    $cFnme='';
+    if ($customerSession->isLoggedIn()) {  
+        $cFnme=$customerSession->getCustomer()->getFirstName(); 
+        $id= $customerSession->getCustomer()->getId(); // get  Full Name
+        $customerRepository = $objectManager->create(\Magento\Customer\Api\CustomerRepositoryInterface::class);
+        $customer = $customerRepository->getById($id);
+        if($customer->getId()){
+            $cFnme= $customer->getFirstname();
+
+        }
+    }
+    // echo 'find this here'.$customerSession->isLoggedIn();
+?>
+
+ <?php if($customerSession->isLoggedIn()){?>       
+    <li><a class='customer-account' href="<?php echo $this->getUrl('customer/account/') ?>"><?=$cFnme;?>'s Account</a></li>     
+    <li><a class='customer-logout' href="<?php echo $this->getUrl('customer/account/logout') ?>">Logout</a></li>
+ <?php }else{ ?>
+     <li class='auth-login'><a  href="<?php echo $this->getUrl('customer/account/login') ?>">Login</a></li> 
+     <li class="whole-lis"><a href="<?php echo $this->getUrl('wholesaler/index/') ?>" class="wholesaler-login">wholesalers</a></li> 
+ <?php }  ?>
+

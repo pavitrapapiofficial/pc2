@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+   <default>
+       <customer>
+           <captcha>
+               <shown_to_logged_in_user>
+                   <captcha_returnform_1>1</captcha_returnform_1>
+               </shown_to_logged_in_user>
+               <always_for>
+                   <captcha_returnform_1>1</captcha_returnform_1>
+               </always_for>
+           </captcha>
+       </customer>
+       <captcha translate="label">
+           <frontend>
+               <areas>
+                   <captcha_returnform_1>
+                       <label>Order Return Form</label>
+                   </captcha_returnform_1>
+               </areas>
+           </frontend>
+       </captcha>
+   </default>
+</config>

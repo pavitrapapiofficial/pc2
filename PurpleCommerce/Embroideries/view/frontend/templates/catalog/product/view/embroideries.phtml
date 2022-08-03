@@ -1,0 +1,371 @@
+<!-- <div>
+    <a class="customButton" href="#" id="click-me">Add Embroideries</a>
+    
+</div> -->
+
+<!-- <div id="popup-modal" style="display:none;"> -->
+<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>  -->
+
+<?php
+
+    $_product = $block->getProduct();
+    $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $_objectManager->get('Magento\Framework\Registry')->registry('current_product');
+    $attributeSet = $_objectManager->create('Magento\Eav\Api\AttributeSetRepositoryInterface');
+    $attributeSetRepository = $attributeSet->get($product->getAttributeSetId());
+    $check=1;
+    $cattid=0;
+    // $orderId=000000026;
+    // $order = $_objectManager->create('Magento\Sales\Model\Order')->load($orderId);
+    // $orderItems = $order->getAllItems();
+    // foreach ($orderItems as $item){
+    //     $options = $item->getProductOptions();
+    //     if (array_key_exists("attributes_info",$options)){
+    //         $infoByRequest = $options['attributes_info'];
+    //         echo '<pre>';
+    //         print_r($infoByRequest[0]['value']);
+    //     }
+    // }
+    $attribute_set_name = $attributeSetRepository->getAttributeSetName();
+    if($attribute_set_name != 'Monogram'){
+
+        $currentProduct = $block->getCurrentProduct();
+        
+        
+        if ($currentProduct = $block->getCurrentProduct()) {
+            $no_of_design;
+            // die;
+            if(!empty($currentProduct->getData('no_of_designs'))){
+                $attId = $currentProduct->getData('no_of_designs');
+                $no_of_designs = $block->getAttributeOptionText($attId);
+                $no_of_design=$no_of_designs[0]['value'];
+                // echo 'Embroideries enabled';
+                $block->ifWholeSaleCustomer();
+                $embJson = $block->getEmbroideriesJson();
+                $arr = json_decode($embJson,true);
+                // echo  '<pre>';
+                // print_r($arr);
+                ?>
+                <input type='hidden' id='no_of_design' value='<?php echo $no_of_design;?>'>
+                    <div class="design-options">
+
+                        <h2 style="padding-top:30px;text-align:left">Select other embroideries</h2>
+                        
+                        <ul class="product-tabs">
+                            <?php 
+                                foreach($arr as $k=>$v){
+                                    
+                                    echo '<li id="product_tabs_'.$v["catid"].'" class="first"><a href="javascript:void(0)" onclick="showdiv('.$v["catid"].')">'.ucfirst($k).'</a></li>';
+                                    
+                                }
+                            ?>
+                        </ul>
+                        <?php 
+
+                            foreach($arr as $k=>$v){
+                                    $cId = $v["catid"];
+                                    if($check==1){
+                                        $cattid = $cId ;
+                                        $check++;
+                                    }
+                                    // $node = $arr[$k];
+                                    $catname= $k;
+                                    // echo $node;
+                                    // echo count($arr[$catname]);
+                                    // die;
+                                echo $htmlDiv = '
+                                
+                                <div class="product-tabs-content" id="product_tabs_'.$v["catid"].'_contents" style="display:none">
+                                    <span class="arrow-left">left</span>
+                                    <span class="arrow-right">right</span>
+                                    <a class="prev browse left" style="display: none;">previous </a>
+                                        <div class="scrollable">   
+                                            <div class="items">
+                                                <div class="band">
+                                                    <ul>';
+                                                        // $i = 0;
+                                                        // foreach ($v as $j=>$val){
+                                                            // echo $j;
+                                                        for($i=0;$i<count($arr[$catname])-1;$i++){
+                                                            $node=$arr[$catname];
+                                                            // echo "here".$node;
+                                                        
+                                                            // die;
+                                                            // if($j!='catid'){
+                                                                // echo $v[$j]['prodid'].'<br/>';
+                                                                // echo $v[$j]['prodname'].'<br/>';
+                                                            echo $html ='
+                                                                <li id="cust'.$i.'" rel="'.$node[$i]["prodid"].'">
+                                                                        
+                                                            <img id="'.$i.'" class="option_image" src="'.$node[$i]["prodImage"].'" rel="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                            
+                                                            <div class="selected" id="tick_'.$node[$i]["prodid"].'_'.$cId.'"><img src="https://www.jacarandaliving.com/pub/media/selectIcon.gif" alt="selected"></div>
+                                                            <div class="tmb"><input style="display:none" type="checkbox" value="436483" class="option_checkbox checkbox" rel="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                                            <span class="label" style="width:130px"><label for="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                                            <div class="con" id="'.$node[$i]["prodid"].'">
+                                                            <img class="thumbnail" id="thumbnail_'.$node[$i]["prodid"].'" src="https://www.jacarandaliving.com/pub/media/maginifier.jpg" alt="zoom">
+                                                            <img class="hidden-large" id="hidden-large_'.$node[$i]["prodid"].'" src="'.$node[$i]["prodImage"].'">
+                                                            </div>
+                                                            <em>'.$node[$i]["prodname"].'</em></label></span></div>
+                                                            <div style="clear:both; height:1px; overflow:hidden;"></div>
+                                                        </li>';
+                                                            // $i++;
+                                                            // }
+                                                            
+                                                        }
+                                                    echo $htmlfooter='</ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    
+                                </div>
+                                ';
+                            }
+                            // echo $html;
+                        ?>
+                        
+                    <!-- </div> -->
+                    <div id='isselected' style="margin-bottom:50px">
+                        <h3>Select embroideries to continue</h3>
+                        <p id="select_design_message">
+                        Click on your choice of design(s) and click ADD TO CART. Select design(s). Click on delete icon to remove selected design.</p>
+                        <!-- <p>Select <b></b> embroideries.</p> -->
+                    </div>
+                    <!-- <a class="customButton" href="#" id="uncheck" style="display:none">Unchek All</a> -->
+                <?php
+            }
+            else{
+                // echo 'No of design is null';
+            }
+            
+        }
+    }
+?>
+</div>
+<script>
+    require(['jquery'], function ($) {
+
+        $(document).ready(function(){
+            $(".arrow-left").click(function(){
+                // alert('tada');
+                $(".band").animate({scrollLeft: "-="+400});
+            });
+            $(".arrow-right").click(function(){
+                // alert('tada 2');
+                $(".band").animate({scrollLeft: "+="+400});
+            });        
+        });
+        var catooid='<?php echo $cattid;?>';
+        // console.log('loaded',catooid);
+
+        var attname = '<?php echo $attribute_set_name;?>';
+        if(attname){
+            $('body').addClass(attname);
+        }
+        if ($("body").hasClass("Gift Certificate")) {
+            
+        }else if($("body").hasClass("Monogram")){
+            $('.product-custom-option').hide();
+            var element1 = $("label:contains('Type')");
+            var element2 = $("label:contains('Text')");
+            var element3 = $("label:contains('Text2')");
+            var element4 = $("label:contains('Font Style')");
+            var element5 = $("label:contains('Color')");
+            element1.hide();element2.hide();element3.hide();element4.hide();element5.hide();
+
+        }else{
+            // alert('not monogram');
+            $('.product-custom-option').hide();
+        }
+
+        var $target1 = $('#isselected');
+        var data1 = $('.product-add-form').html();
+        
+		// if ($target.find("ul").length > 0) {
+			$target1.append('<div class="product-add-form">'+data1+'</div>');
+		// }
+        	// var showdiv;
+	
+        var globalEmbJson=[];
+        var currentjson = {};
+        var max_count = $('#no_of_design').val();
+        var element = $("label:contains('Embroideries')");
+        element.hide();
+        $('#product_tabs_'+catooid+'_contents').show();
+        $(document).ready(function(){
+            showdiv = function (catid)
+            {
+                $('.product-tabs-content').hide();
+                var id = 'product_tabs_'+catid+'_contents';
+                // console.log('clicked',id);
+                // $(''+id+'').toggle();
+                $('div.product-tabs-content').hide()  // first hide all `.hide`
+                $('#'+ id +'.product-tabs-content').show(); // then show the element with id `#1`
+                
+            }
+
+            
+        });
+
+        $('.con').on('click', function() {
+            // console.log(this.id);
+            var getid = this.id;
+            // $('img#thumbnail_'+getid).hover( function() {
+            var imgDiv = 'img#thumbnail_'+getid;
+            var pos = $(imgDiv).position();
+            var outerwidth = $(".con").width();
+            var width = $(imgDiv).outerWidth();
+                
+            var img = new Image();
+            img.src = 'https://www.jacarandaliving.com/pub/media/catalog/product/b/a/bat_ballerina_and_teddy_lfooy77ukzcftnmh.jpg';    
+            var largeimgwidth = img.width;
+            console.log("calculation",outerwidth,width,largeimgwidth);
+            if((outerwidth-width) < largeimgwidth) {
+                $("img#hidden-large_"+getid).css({
+                    position: "fixed",
+                    top: pos.top + "px",
+                    opacity:1,
+                    height:"300px",
+                    width:"300px",
+                    border:"1px solid black",
+                    padding:"10px",
+                    left: "50%",
+                    transform: "translate(-50%, 0px)"
+                }).toggle();       
+            }
+            // });
+            
+        });
+        
+        $('.con').on('mouseleave', function() {
+            $('.hidden-large').hide();
+            return false;
+        });
+
+        $(function(){
+            $('.option_image').on('click', function(e) {
+                var getid = $(this).attr('rel');
+                var imgsrc = $(this).attr('src');
+                var orgId = getid.substring(7,getid.length);
+                var prodid = orgId.split('_');
+                var catoid = prodid[2];
+                // console.log("ids",catoid);
+                if((getselectioncount()+1)<=max_count){
+                    $('#tick'+orgId).toggleClass('active');
+                    e.preventDefault();
+                    var sku = $('label[for='+getid).text().replace(/(\r\n|\n|\r)/gm,'');
+                    addId(prodid[1],sku,imgsrc,catoid);
+                    getClone();
+                }else{
+                    // if($('#tick'+orgId).hasClass('active')){
+                        $('.selected').removeClass('active');
+                        $('#tick'+orgId).toggleClass('active');
+                        var sku1 = $('label[for='+getid).text().replace(/(\r\n|\n|\r)/gm,'');
+                        addId(prodid[1],sku1,imgsrc,catoid);
+                        getClone();
+                    // }else{
+                    //     alert('You reached max number of selection');
+                    // }
+                }
+            });
+            
+            
+        });
+        
+        function getClone(){
+            var $target = $('#isselected');
+            var data = $('.product-add-form').html();
+            if ($target.find("ul").length > 0) {
+                $target.append('<div class="product-add-form">'+data+'</div>');
+            }
+            $('.product-custom-option').val($('[class=product-custom-option]').val());
+            
+        }
+
+        // popoulate contomizable field ==>
+        function populateData(){
+            $('[class=product-custom-option]').val('');
+            var val=[];
+            for(var i = 0; i<globalEmbJson.length; i++){
+                val.push('('+(i+1)+')'+globalEmbJson[i].sku);
+            }
+            var new_val = val.join(", ");
+            new_val=new_val.replace(/<(.|\n)*?>/g, '');
+            // console.log('data1',new_val);
+            $('[class=product-custom-option]').val(new_val);
+        }
+
+        // get json count ==>
+        function getselectioncount(){
+            // console.log('count',globalEmbJson.length,"max_count",max_count);
+            
+            return globalEmbJson.length;
+        }
+
+        function checkAndRemove(arr, value) { 
+            return arr.filter(function(ele){ 
+                return ele.id != value; 
+            });
+        }
+
+        function ifnodeexists(array,node){
+            var status;
+            return status = array.some(function(el) {
+                return (el.id == node);
+            });
+
+        }
+
+        // function to add data to customizable field ===>
+        function addId(id,sku,imgsrc,catoid){
+            currentjson = {'id':id,'sku':sku,'src':imgsrc,'cat':catoid};
+            globalEmbJson=[];
+            if(globalEmbJson.length>0){
+                if(ifnodeexists(globalEmbJson,id)){
+                    globalEmbJson=checkAndRemove(globalEmbJson,id);
+                }else{
+                    globalEmbJson.push(currentjson);
+                }
+            }else{
+                globalEmbJson.push(currentjson);
+            }
+            
+            render();
+        }
+
+        //function to render json to frontend ==>
+        function render(){
+            var designs = $('#no_of_design').val();
+            var htm = '<h3>Select embroideries to continue.</h3><p id="select_design_message">Click on your choice of design(s) and click ADD TO CART. Select up to '+designs+' design(s). Click on delete icon to remove selected design.</p><ul class="nowselected">';
+            for(var i = 0; i<globalEmbJson.length; i++){
+                htm += '<li><img src="'+globalEmbJson[i].src+'" /><div class="removeEmb" id="remove_'+globalEmbJson[i].id+'_'+globalEmbJson[i].cat+'"><img src="https://www.jacarandaliving.com/pub/media/remove.png" alt="remove" width="20px;position:absolute"></div></li>';
+            }
+            htm +='</ul>';
+            $('#isselected').html(htm);
+            populateData();
+        }	
+
+        $(document).ready(function(){
+            $('.product-tabs li:first').addClass('active');
+            $('.product-tabs').on('click', 'li', function() {
+                $('.product-tabs li.active').removeClass('active');
+                $(this).addClass('active');
+            });
+            
+            $(document).on("click", ".removeEmb" , function() {
+            
+                // alert('here2');
+                var getId = this.id;
+                var removedId = getId.substring(7,getId.length);
+                var prodid = removedId.split('_');
+                var removedthis = prodid[0];
+                // console.log("removed Clicked",getId,removedId,removedthis,'#tick'+removedId);
+                addId(removedthis,'','','');
+                $('#tick_'+removedId).removeClass('active');
+                getClone();
+            });
+        });
+        
+    })
+</script>
+

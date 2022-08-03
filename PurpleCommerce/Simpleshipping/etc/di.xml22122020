@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 MageWorx. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\OfflineShipping\Model\Carrier\Freeshipping" type="PurpleCommerce\Simpleshipping\Model\Carrier\Freeshipping" />
+    <type name="Magento\Quote\Model\ShippingMethodManagement">
+        <plugin name="shipping_method_management" type="PurpleCommerce\Simpleshipping\Plugin\Model\ShippingMethodManagement" disabled="false"/>
+    </type>
+</config>

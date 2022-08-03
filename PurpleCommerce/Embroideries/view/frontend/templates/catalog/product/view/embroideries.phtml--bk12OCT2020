@@ -1,0 +1,308 @@
+<!-- <div>
+    <a class="customButton" href="#" id="click-me">Add Embroideries</a>
+    
+</div> -->
+
+<!-- <div id="popup-modal" style="display:none;"> -->
+    
+
+<?php
+    $_product = $block->getProduct();
+    $_objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $product = $_objectManager->get('Magento\Framework\Registry')->registry('current_product');
+    $attributeSet = $_objectManager->create('Magento\Eav\Api\AttributeSetRepositoryInterface');
+    $attributeSetRepository = $attributeSet->get($product->getAttributeSetId());
+    $attribute_set_name = $attributeSetRepository->getAttributeSetName();
+    if($attribute_set_name != 'Monogram'){
+
+    $currentProduct = $block->getCurrentProduct();
+    
+    
+if ($currentProduct = $block->getCurrentProduct()) {
+    $attId = $currentProduct->getData('no_of_designs');
+    $no_of_designs = $block->getAttributeOptionText($attId);
+    // die;
+    if(!empty($currentProduct->getData('no_of_designs'))){
+        $no_of_design=$no_of_designs[0]['value'];
+        // echo 'Embroideries enabled';
+        $block->ifWholeSaleCustomer();
+        $embJson = $block->getEmbroideriesJson();
+        $arr = json_decode($embJson,true);
+        // echo  '<pre>';
+        // print_r($arr);
+        ?>
+        <input type='hidden' id='no_of_design' value='<?php echo $no_of_design;?>'>
+            <div class="design-options">
+
+                <h2 style="padding-top:30px;text-align:left">Select other embroideries</h2>
+                <p id="select_design_message" style="display: none;">
+                To order, click on your design selection then place the order 1 design(s) at a time. Repeat for additional selections. Double click to remove the selected design.</p>
+                <ul class="product-tabs">
+                    <?php 
+                        foreach($arr as $k=>$v){
+                            
+                            echo '<li id="product_tabs_'.$v["catid"].'" class="first"><a href="javascript:void(0)" onclick="showdiv('.$v["catid"].')">'.ucfirst($k).'</a></li>';
+                            
+                        }
+                    ?>
+                </ul>
+                <?php 
+                    foreach($arr as $k=>$v){
+                            $cId = $v["catid"];
+                            // $node = $arr[$k];
+                            $catname= $k;
+                            // echo $node;
+                            // echo count($arr[$catname]);
+                            // die;
+                        echo $htmlDiv = '
+                        <div class="product-tabs-content" id="product_tabs_'.$v["catid"].'_contents" style="display:none">
+			
+                            <a class="prev browse left" style="display: none;">previous </a>
+                                <div class="scrollable">   
+                                    <div class="items">
+                                        <div class="band">
+                                            <ul>';
+                                                // $i = 0;
+                                                // foreach ($v as $j=>$val){
+                                                    // echo $j;
+                                                for($i=0;$i<count($arr[$catname])-1;$i++){
+                                                    $node=$arr[$catname];
+                                                    // echo "here".$node;
+                                                
+                                                // die;
+                                                    // if($j!='catid'){
+                                                        // echo $v[$j]['prodid'].'<br/>';
+                                                        // echo $v[$j]['prodname'].'<br/>';
+                                                    echo $html ='
+                                                        <li id="cust'.$i.'" rel="'.$node[$i]["prodid"].'">
+                                                                
+                                                    <img id="'.$i.'" class="option_image" src="'.$node[$i]["prodImage"].'" rel="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                    
+                                                    <div class="selected" id="tick_'.$node[$i]["prodid"].'_'.$cId.'"><img src="http://old.jacarandaliving.com/skin/frontend/default/modern/images/selectIcon.gif" alt="selected"></div>
+                                                    <div class="tmb"><input style="display:none" type="checkbox" value="436483" class="option_checkbox checkbox" rel="options_'.$node[$i]["prodid"].'_'.$cId.'">
+                                                    <span class="label" style="width:130px"><label for="options_'.$node[$i]["prodid"].'_'.$cId.'"><a class="jqzoom" href="'.$node[$i]["prodImage"].'" title="" style="color:#B0B0B0">
+                                                    <div class="con" id="'.$node[$i]["prodid"].'">
+                                                    <img class="thumbnail" id="thumbnail_'.$node[$i]["prodid"].'" src="http://old.jacarandaliving.com/skin/frontend/default/modern/images/maginifier.jpg" alt="zoom">
+                                                    <img class="hidden-large" id="hidden-large_'.$node[$i]["prodid"].'" src="'.$node[$i]["prodImage"].'">
+                                                    </div>
+                                                    </a>'.$node[$i]["prodname"].'</label></span></div>
+                                                    <div style="clear:both; height:1px; overflow:hidden;"></div>
+                                                </li>';
+                                                    // $i++;
+                                                    // }
+                                                    
+                                                }
+                                            echo $htmlfooter='</ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                        </div>
+                        ';
+                    }
+                    // echo $html;
+                ?>
+                
+            <!-- </div> -->
+            <div id='isselected' style="margin-bottom:50px">
+                <h3 style="border-bottom:1px solid grey;">Select embroideries to continue</h3>
+                <p>Select <b><?php echo $no_of_design;?></b> embroideries.</p>
+            </div>
+            <!-- <a class="customButton" href="#" id="uncheck" style="display:none">Unchek All</a> -->
+        <?php
+    }
+    else{
+        // echo 'No of design is null';
+    }
+    
+}
+    }
+?>
+</div>
+<script>
+    require(['jquery'], function ($) {
+        var $target1 = $('#isselected');
+        var data1 = $('.product-add-form').html();
+        
+		// if ($target.find("ul").length > 0) {
+			$target1.append('<div class="product-add-form">'+data1+'</div>');
+		// }
+        	// var showdiv;
+	
+        var globalEmbJson=[];
+        var currentjson = {};
+        var max_count = $('#no_of_design').val();
+        $('label[for="options_23_text"]').hide();
+        $('#product_tabs_139_contents').show();
+        $(document).ready(function(){
+            showdiv = function (catid)
+            {
+                $('.product-tabs-content').hide();
+                var id = 'product_tabs_'+catid+'_contents';
+                // console.log('clicked',id);
+                // $(''+id+'').toggle();
+                $('div.product-tabs-content').hide()  // first hide all `.hide`
+                $('#'+ id +'.product-tabs-content').show(); // then show the element with id `#1`
+                
+            }
+
+            
+        });
+
+        $('.con').on('mouseover', function() {
+            // console.log(this.id);
+            var getid = this.id;
+            // $('img#thumbnail_'+getid).hover( function() {
+            var imgDiv = 'img#thumbnail_'+getid;
+            var pos = $(imgDiv).position();
+            var outerwidth = $(".con").width();
+            var width = $(imgDiv).outerWidth();
+                
+            var img = new Image();
+            img.src = 'http://15.206.147.240/JL_design/pub/media/catalog/product/b/a/bat_ballerina_and_teddy_lfooy77ukzcftnmh.jpg';    
+            var largeimgwidth = img.width;
+            console.log("calculation",outerwidth,width,largeimgwidth);
+            if((outerwidth-width) < largeimgwidth) {
+                $("img#hidden-large_"+getid).css({
+                    position: "absolute",
+                    top: pos.top + "px",
+                    opacity:1,
+                    height:"300px",
+                    width:"300px",
+                    border:"1px solid black",
+                    padding:"10px",
+                    left: (pos.left + width) + "px"
+                }).toggle();       
+            }
+            // });
+            
+        });
+        
+        $('.con').on('mouseleave', function() {
+            $('.hidden-large').hide();
+            return false;
+        });
+
+        $(function(){
+            $('.option_image').on('click', function(e) {
+                var getid = $(this).attr('rel');
+                var imgsrc = $(this).attr('src');
+                var orgId = getid.substring(7,getid.length);
+                var prodid = orgId.split('_');
+                var catoid = prodid[2];
+                console.log("ids",catoid);
+                if((getselectioncount()+1)<=max_count){
+                    $('#tick'+orgId).toggleClass('active');
+                    e.preventDefault();
+                    var sku = $('label[for='+getid).text().replace(/(\r\n|\n|\r)/gm,'');
+                    addId(prodid[1],sku,imgsrc,catoid);
+                    getClone();
+                }else{
+                    if($('#tick'+orgId).hasClass('active')){
+                        $('#tick'+orgId).toggleClass('active');
+                        var sku1 = $('label[for='+getid).text().replace(/(\r\n|\n|\r)/gm,'');
+                        addId(prodid[1],sku1,imgsrc,catoid);
+                        getClone();
+                    }else{
+                        alert('You reached max number of selection');
+                    }
+                }
+            });
+            
+            
+        });
+        
+        function getClone(){
+            var $target = $('#isselected');
+            var data = $('.product-add-form').html();
+            if ($target.find("ul").length > 0) {
+                $target.append('<div class="product-add-form">'+data+'</div>');
+            }
+            $('.product-custom-option').val($('[id=options_23_text]').val());
+            
+        }
+
+        // popoulate contomizable field ==>
+        function populateData(){
+            $('[id=options_23_text]').val('');
+            var val=[];
+            for(var i = 0; i<globalEmbJson.length; i++){
+                val.push(globalEmbJson[i].sku);
+            }
+            var new_val = val.join(", ");
+            $('[id=options_23_text]').val(new_val);
+        }
+
+        // get json count ==>
+        function getselectioncount(){
+            console.log('count',globalEmbJson.length,"max_count",max_count);
+            
+            return globalEmbJson.length;
+        }
+
+        function checkAndRemove(arr, value) { 
+            return arr.filter(function(ele){ 
+                return ele.id != value; 
+            });
+        }
+
+        function ifnodeexists(array,node){
+            var status;
+            return status = array.some(function(el) {
+                return (el.id == node);
+            });
+
+        }
+
+        // function to add data to customizable field ===>
+        function addId(id,sku,imgsrc,catoid){
+            currentjson = {'id':id,'sku':sku,'src':imgsrc,'cat':catoid};
+            if(globalEmbJson.length>0){
+                if(ifnodeexists(globalEmbJson,id)){
+                    globalEmbJson=checkAndRemove(globalEmbJson,id);
+                }else{
+                    globalEmbJson.push(currentjson);
+                }
+            }else{
+                globalEmbJson.push(currentjson);
+            }
+            
+            render();
+        }
+
+        //function to render json to frontend ==>
+        function render(){
+            
+            var htm = '<h3 style="border-bottom:1px solid grey;">Select embroideries to continue.</h3><p>Items you have selected</p><ul class="nowselected">';
+            for(var i = 0; i<globalEmbJson.length; i++){
+                htm += '<li><img src="'+globalEmbJson[i].src+'" /><div class="removeEmb" id="remove_'+globalEmbJson[i].id+'_'+globalEmbJson[i].cat+'"><img src="http://15.206.147.240/JL_design/pub/media/remove.png" alt="remove" width="20px;position:absolute"></div></li>';
+            }
+            htm +='</ul>';
+            $('#isselected').html(htm);
+            populateData();
+        }	
+
+        $(document).ready(function(){
+            $('.product-tabs li:first').addClass('active');
+            $('.product-tabs').on('click', 'li', function() {
+                $('.product-tabs li.active').removeClass('active');
+                $(this).addClass('active');
+            });
+            
+            $(document).on("click", ".removeEmb" , function() {
+            
+                // alert('here2');
+                var getId = this.id;
+                var removedId = getId.substring(7,getId.length);
+                var prodid = removedId.split('_');
+                var removedthis = prodid[0];
+                console.log("removed Clicked",getId,removedId,removedthis,'#tick'+removedId);
+                addId(removedthis,'','','');
+                $('#tick_'+removedId).removeClass('active');
+                getClone();
+            });
+        });
+        
+    })
+</script>
+
